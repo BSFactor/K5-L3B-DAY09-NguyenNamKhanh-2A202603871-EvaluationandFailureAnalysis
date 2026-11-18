@@ -44,8 +44,42 @@ def slice_check(pr: dict, base: dict, spec: dict) -> tuple[list[str], list[str]]
       - fail if below "min", or if no_significant_drop and the paired CI over the slice's items
         lies entirely below 0
     Return (blocked ids like "slice:money_movement/pass_rate", report lines)."""
-    # TODO M5
-    return [], []
+    blocked, lines = [], []
+    bs = spec.get("bootstrap", {})
+    for rule in spec.get("slices", []):
+        name, metric = rule["name"], rule["metric"]
+        sid = f"slice:{name}/{metric}"
+        a, b = per_item(pr, metric, name), per_item(base, metric, name)
+        value = sum(a.values()) / len(a) if a else None
+        failed = False
+        notes = []
+        if not a or not b or set(a) != set(b):
+            failed = True
+            notes.append("missing or unpaired slice items")
+        else:
+            if "min" in rule and value < rule["min"]:
+                failed = True
+                notes.append(f"below floor {rule['min']}")
+            if rule.get("no_significant_drop"):
+                keys = sorted(a)
+                try:
+                    d, lo, hi = stats.paired_bootstrap(
+                        [a[k] for k in keys], [b[k] for k in keys],
+                        n_resamples=bs.get("n_resamples", 1000), rng=bs.get("rng", 2027),
+                        confidence=bs.get("confidence", 0.95))
+                except ValueError as exc:
+                    failed = True
+                    notes.append(f"cannot estimate paired CI: {exc}")
+                else:
+                    notes.append(f"Δ {d:+.3f} CI [{lo:+.3f}, {hi:+.3f}]")
+                    if hi < 0:
+                        failed = True
+        blocking = bool(rule.get("blocking"))
+        if failed and blocking:
+            blocked.append(sid)
+        verdict = ("BLOCK" if blocking else "warn") if failed else "ok"
+        lines.append(f"  {sid:<36} {str(value):<8} items={len(a)} {'; '.join(notes)} {verdict}")
+    return blocked, lines
 
 
 def check(pr: dict, base: dict, spec: dict, base_spec: dict | None = None) -> tuple[list[str], list[str]]:

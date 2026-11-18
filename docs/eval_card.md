@@ -93,3 +93,12 @@ Thêm/đổi item, label, split hoặc provenance đáng kể → tăng `eval_se
 và sinh baseline mới. Đổi grader/metric/ngưỡng → tăng `metric_spec_version`, ghi
 lý do, chạy lại báo cáo; cùng eval set chỉ siết ngưỡng theo quy tắc README. Không
 đổi fixture Lab 8 hoặc chỉnh tay report để cải thiện số liệu.
+
+## Cập nhật M5 — chỉ xác minh với fixtures được cung cấp
+
+V2 có 28 item × 5 seed, SHA `a7b022d996d3`, metric spec v2.1 và baseline swarm
+`E-swarm-20261118-a7b0`. Global pass_rate của slice_regression=0.9357 vẫn qua
+sàn; money_movement pass_rate=0.85 rớt sàn 0.90 nên gate chặn đúng slice.
+Fixed và honest_refactor đều được gate cho qua. Xem [chi tiết M5](m5_slices.md)
+và các report liên kết trong đó. Grade hidden thuộc giảng viên và chưa chạy;
+M6/M7 vẫn còn, không suy kết quả private từ kết quả công khai.
