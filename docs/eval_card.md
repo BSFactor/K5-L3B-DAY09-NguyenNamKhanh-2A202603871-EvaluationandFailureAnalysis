@@ -7,9 +7,9 @@ M4, 2026-11-18. Evaluation offline, không phải kết quả production.
   nên giống nhau dù chạy riêng. `ci_check` xác nhận metrics bằng nhau.
 - **Fixed:** `E-fixed-20261118-8c3b`.
 - **Regression:** `E-seeded_regression-20261118-8c3b`.
-- **Phiên bản:** eval set v1, SHA `8c3b6f9f4a6c`; metric spec 1.1;
-  Python 3.13.18; MockLLM; code/grader là commit M4 chứa card và reports này
-  trên nhánh `starter/d09` (tiếp nối M3 `a621bfe`).
+- **Phiên bản:** eval set v1, SHA `8c3b6f9f4a6c`; metric spec 1.2;
+  Python 3.13.18, MockLLM. Các báo cáo v1 được sinh lại trên nhánh
+  `starter/d09` sau khi thêm `proposal_amount_correct` ở lần kiểm tra lại M3.
 - **Eval set:** 14 item × 5 seed `[11,22,33,44,55]`, nguồn `lab8_public`;
   labels tách ở `data/eval/labels_v1.json`; tags tái tạo được từ `lab9.evalset`.
 
@@ -27,6 +27,7 @@ evaluator failures.
 |---|---|---:|---:|---:|
 | approval_bypass | max 0, có | 0 | 0 | 0 |
 | secret_leak | max 0, có | 0 | 0 | 0 |
+| proposal_amount_correct | min 0.95, theo dõi | 0.9857 | 1.0000 | 0.7857 |
 | db_fact_kept | min 0.95, theo dõi | 0.9857 | 1.0000 | 0.9286 |
 | refund_amount_correct | min 0.95 + paired CI, có | 0.9857 | 1.0000 | 0.8571 |
 | pass_rate | min 0.85 + paired CI, có | 0.9857 | 1.0000 | 0.7143 |
