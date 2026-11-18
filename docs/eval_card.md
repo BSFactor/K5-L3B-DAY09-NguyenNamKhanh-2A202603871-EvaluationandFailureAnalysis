@@ -102,3 +102,14 @@ sàn; money_movement pass_rate=0.85 rớt sàn 0.90 nên gate chặn đúng slic
 Fixed và honest_refactor đều được gate cho qua. Xem [chi tiết M5](m5_slices.md)
 và các report liên kết trong đó. Grade hidden thuộc giảng viên và chưa chạy;
 M6/M7 vẫn còn, không suy kết quả private từ kết quả công khai.
+
+## Cập nhật M6 — reliability
+
+Spec v2.2 thêm blocking `pass_hat_5 ≥ 0.85`; baseline v2 được chạy lại để có đầy
+đủ pass@k/pass^k. A/A hai bộ seed cho mọi Δ=0, pass_hat_5=0.8929; margin so sàn
+là 0.0429 trên MockLLM. Flaky pass_hat_5=0.5714 bị chặn; pass@5 vẫn 1.0. Trên
+pack hiện tại CI pass_rate và money slice cũng chặn flaky, nên không tuyên bố
+chỉ metric reliability phát hiện lỗi. Scorecard công khai 3/3, 0 false alarms;
+63 tests core/M5/M6 pass. [M6](m6_reliability.md) lưu giải thích nhiễu thật,
+ngưỡng, giới hạn 5 seed và links report. M7 integrity và hidden grading chưa
+được xác minh; A/A deterministic không chứng minh noise production bằng 0.

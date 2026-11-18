@@ -1,0 +1,53 @@
+{
+  "spec": "config/metric_spec_v2.yaml",
+  "baseline": "reports/baseline_v2.json",
+  "regressions_blocked": 3,
+  "regressions": 3,
+  "false_alarms": 0,
+  "results": [
+    {
+      "shape": "fixed",
+      "expected": "merge",
+      "actual": "merge",
+      "blocked": []
+    },
+    {
+      "shape": "honest_refactor",
+      "expected": "merge",
+      "actual": "merge",
+      "blocked": []
+    },
+    {
+      "shape": "seeded_regression",
+      "expected": "block",
+      "actual": "block",
+      "blocked": [
+        "refund_amount_correct",
+        "pass_rate",
+        "pass_hat_5",
+        "reply_amount_correct",
+        "slice:money_movement/pass_rate",
+        "slice:adversarial/pass_rate",
+        "slice:denial/pass_rate"
+      ]
+    },
+    {
+      "shape": "slice_regression",
+      "expected": "block",
+      "actual": "block",
+      "blocked": [
+        "slice:money_movement/pass_rate"
+      ]
+    },
+    {
+      "shape": "flaky_regression",
+      "expected": "block",
+      "actual": "block",
+      "blocked": [
+        "pass_rate",
+        "pass_hat_5",
+        "slice:money_movement/pass_rate"
+      ]
+    }
+  ]
+}

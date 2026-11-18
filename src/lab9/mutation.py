@@ -30,6 +30,14 @@ EXPECTED = {
 }
 
 
+def write_report(path: str | None, report: dict) -> None:
+    if path:
+        out = Path(path)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"wrote {out}")
+
+
 def scorecard(spec: dict, base: dict, base_spec: dict | None) -> list[tuple[str, str, str, list[str]]]:
     variants.register()
     out = []
@@ -61,6 +69,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--detect", action="store_true",
                     help="M3: share of failing seeded_regression rows your graders explain (>=0.80), and of fixed rows (<=0.10)")
     ap.add_argument("--aa", help="comma-separated alternate seeds: print the A/A metric deltas")
+    ap.add_argument("--out", help="write the generated A/A or mutation scorecard as JSON")
     args = ap.parse_args(argv)
     spec = load_spec(Path(args.spec))
     variants.register()
@@ -70,12 +79,17 @@ def main(argv: list[str] | None = None) -> int:
         print(f"detection {det:.2%} (target >=80%) · false alarms {fa:.2%} (target <=10%)")
         return 0 if ok else 1
     if args.aa:
-        a = run_eval("swarm", spec)["metrics"]
-        b = run_eval("swarm", spec, [int(x) for x in args.aa.split(",")])["metrics"]
+        first = run_eval("swarm", spec)
+        second = run_eval("swarm", spec, [int(x) for x in args.aa.split(",")])
+        a, b = first["metrics"], second["metrics"]
+        deltas = {}
         print(f"{'metric':<22} {'spec seeds':>10} {'alt seeds':>10} {'delta':>8}")
         for k in a:
             if isinstance(a[k], (int, float)) and isinstance(b.get(k), (int, float)):
+                deltas[k] = b[k] - a[k]
                 print(f"{k:<22} {a[k]:>10} {b[k]:>10} {b[k] - a[k]:>+8.4f}")
+        write_report(args.out, {"spec": args.spec, "first": first, "second": second,
+                                "deltas": deltas})
         return 0
     base = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
     base_spec = load_spec(Path(args.base_spec)) if args.base_spec else None
@@ -87,6 +101,10 @@ def main(argv: list[str] | None = None) -> int:
     regs = sum(w == "block" for _, w, _, _ in rows)
     fa = sum(w == "merge" and g == "block" for _, w, g, _ in rows)
     print(f"mutation score {killed}/{regs} · false alarms {fa}")
+    write_report(args.out, {"spec": args.spec, "baseline": args.baseline,
+                            "regressions_blocked": killed, "regressions": regs, "false_alarms": fa,
+                            "results": [{"shape": name, "expected": want, "actual": got, "blocked": why}
+                                        for name, want, got, why in rows]})
     return 0 if killed == regs and fa == 0 else 1
 
 
