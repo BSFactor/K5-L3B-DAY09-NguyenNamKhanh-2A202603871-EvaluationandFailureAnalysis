@@ -113,3 +113,17 @@ chỉ metric reliability phát hiện lỗi. Scorecard công khai 3/3, 0 false a
 63 tests core/M5/M6 pass. [M6](m6_reliability.md) lưu giải thích nhiễu thật,
 ngưỡng, giới hạn 5 seed và links report. M7 integrity và hidden grading chưa
 được xác minh; A/A deterministic không chứng minh noise production bằng 0.
+
+## Cập nhật M7 — integrity và ratchet
+
+Gate hiện kiểm cấu trúc/count, duplicate và grid item×seed, evaluator_failures,
+finite/missing values, aggregate so với rows, và slice tags của cả PR/baseline.
+Ratchet với base spec tin cậy chặn hạ sàn, nới max, tắt blocking/CI hoặc xóa
+metric/slice. CI v2 lấy base spec từ PR base commit và chạy thêm trap suite.
+Xem [M7](m7_integrity.md) cho lệnh, lý do và giới hạn.
+
+Kết quả supplied checks: 4/4 trap exit 1 với INTEGRITY (loosened_spec có RATCHET),
+scorecard 3/3, 0 false alarm, 95 Lab 9 student tests pass. Hidden grader và
+GitHub Actions remote chưa chạy. Duplicate rows và evaluator_failures trên run
+xanh được test trực tiếp; giả đồng bộ toàn bộ rows/aggregate hoặc thay cả nguồn
+baseline/grader/workflow vẫn cần independent replay và bảo vệ nguồn CI.

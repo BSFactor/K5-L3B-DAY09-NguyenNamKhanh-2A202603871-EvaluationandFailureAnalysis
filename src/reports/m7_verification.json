@@ -1,0 +1,87 @@
+{
+  "scope": "supplied traps and variants; hidden grader not run",
+  "passed": true,
+  "traps": [
+    {
+      "trap": "cherry_picked_seeds",
+      "exit_code": 1,
+      "passed": true,
+      "stdout": "gate: PR E-slice_regression-20261118-a7b0 vs main E-swarm-20261118-a7b0\n  INTEGRITY PR: metric pass_at_3 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: metric pass_hat_3 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: metric pass_at_5 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: metric pass_hat_5 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: required metric pass_hat_5 missing or invalid\n  INTEGRITY PR (item_id, seed) set differs from baseline\nexit 1 — blocked: integrity\n",
+      "stderr": ""
+    },
+    {
+      "trap": "dropped_failing_rows",
+      "exit_code": 1,
+      "passed": true,
+      "stdout": "gate: PR E-slice_regression-20261118-a7b0 vs main E-swarm-20261118-a7b0\n  INTEGRITY PR: row count differs from manifest items x seeds\n  INTEGRITY PR: metric pass_at_3 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: metric pass_hat_3 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: metric pass_at_5 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: metric pass_hat_5 is missing/nonfinite/nonnumeric\n  INTEGRITY PR: required metric pass_hat_5 missing or invalid\n  INTEGRITY PR: rows do not cover the complete item x seed grid\n  INTEGRITY PR (item_id, seed) set differs from baseline\nexit 1 — blocked: integrity\n",
+      "stderr": ""
+    },
+    {
+      "trap": "evaluator_errors_as_nan",
+      "exit_code": 1,
+      "passed": true,
+      "stdout": "gate: PR E-slice_regression-20261118-a7b0 vs main E-swarm-20261118-a7b0\n  INTEGRITY PR: row ('E-014', 11): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-014', 11): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-014', 33): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-014', 33): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-014', 55): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-014', 55): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-105', 11): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-105', 11): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-105', 33): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-105', 33): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-105', 55): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-105', 55): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-106', 11): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-106', 11): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-106', 33): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-106', 33): pass_rate missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-106', 55): refund_amount_correct missing/nonfinite/invalid\n  INTEGRITY PR: row ('E-106', 55): pass_rate missing/nonfinite/invalid\nexit 1 — blocked: integrity\n",
+      "stderr": ""
+    },
+    {
+      "trap": "loosened_spec",
+      "exit_code": 1,
+      "passed": true,
+      "stdout": "gate: PR E-slice_regression-20261118-a7b0 vs main E-swarm-20261118-a7b0\n  INTEGRITY RATCHET loosened min for db_fact_kept\n  INTEGRITY RATCHET loosened min for refund_amount_correct\n  INTEGRITY RATCHET removed no_significant_drop for refund_amount_correct\n  INTEGRITY RATCHET loosened min for pass_rate\n  INTEGRITY RATCHET removed no_significant_drop for pass_rate\n  INTEGRITY RATCHET loosened min for pass_hat_5\n  INTEGRITY RATCHET loosened min for reply_amount_correct\n  INTEGRITY RATCHET removed no_significant_drop for reply_amount_correct\n  INTEGRITY RATCHET removed slices rule ('money_movement', 'pass_rate')\n  INTEGRITY RATCHET removed slices rule ('adversarial', 'pass_rate')\n  INTEGRITY RATCHET removed slices rule ('denial', 'pass_rate')\nexit 1 — blocked: integrity\n",
+      "stderr": ""
+    }
+  ],
+  "mutation": {
+    "spec": "config/metric_spec_v2.yaml",
+    "baseline": "reports/baseline_v2.json",
+    "regressions_blocked": 3,
+    "regressions": 3,
+    "false_alarms": 0,
+    "results": [
+      {
+        "shape": "fixed",
+        "expected": "merge",
+        "actual": "merge",
+        "blocked": []
+      },
+      {
+        "shape": "honest_refactor",
+        "expected": "merge",
+        "actual": "merge",
+        "blocked": []
+      },
+      {
+        "shape": "seeded_regression",
+        "expected": "block",
+        "actual": "block",
+        "blocked": [
+          "refund_amount_correct",
+          "pass_rate",
+          "pass_hat_5",
+          "reply_amount_correct",
+          "slice:money_movement/pass_rate",
+          "slice:adversarial/pass_rate",
+          "slice:denial/pass_rate"
+        ]
+      },
+      {
+        "shape": "slice_regression",
+        "expected": "block",
+        "actual": "block",
+        "blocked": [
+          "slice:money_movement/pass_rate"
+        ]
+      },
+      {
+        "shape": "flaky_regression",
+        "expected": "block",
+        "actual": "block",
+        "blocked": [
+          "pass_rate",
+          "pass_hat_5",
+          "slice:money_movement/pass_rate"
+        ]
+      }
+    ]
+  }
+}
