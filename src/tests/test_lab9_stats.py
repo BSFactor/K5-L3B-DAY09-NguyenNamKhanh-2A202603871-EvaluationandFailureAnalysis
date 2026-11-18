@@ -49,3 +49,15 @@ def test_paired_bootstrap_reference(stats):
 
 def test_paired_bootstrap_identical_is_zero(stats):
     assert stats.paired_bootstrap([1, 0, 1], [1, 0, 1]) == (0.0, 0.0, 0.0)
+
+
+def test_paired_bootstrap_preserves_item_pairs(stats):
+    # Large item-to-item variation cancels because the same items are paired.
+    assert stats.paired_bootstrap([1, 101, 201], [0, 100, 200]) == (1.0, 1.0, 1.0)
+
+
+@pytest.mark.parametrize("a,b", [([], []), ([1], [0, 1]), ([float("nan"), 1], [0, 1]),
+                                  ([0, float("inf")], [0, 1])])
+def test_paired_bootstrap_rejects_invalid_samples(stats, a, b):
+    with pytest.raises(ValueError):
+        stats.paired_bootstrap(a, b)
